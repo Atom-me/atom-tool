@@ -3,9 +3,7 @@ package com.atom.tool.core;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
@@ -16,6 +14,9 @@ import java.util.Objects;
 public class DateUtils {
 
     public static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    public static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
+
 
     /**
      * str to date,
@@ -47,9 +48,8 @@ public class DateUtils {
         if (StringUtils.isBlank(datetime)) {
             return null;
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
-        LocalDateTime dateTime = LocalDateTime.parse(datetime, dateTimeFormatter).plusMinutes(minutes);
-        return dateTime.format(dateTimeFormatter);
+        LocalDateTime dateTime = LocalDateTime.parse(datetime, DEFAULT_DATETIME_FORMATTER).plusMinutes(minutes);
+        return dateTime.format(DEFAULT_DATETIME_FORMATTER);
     }
 
 
@@ -63,8 +63,7 @@ public class DateUtils {
         if (StringUtils.isBlank(datetime)) {
             return null;
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
-        LocalDateTime dateTime = LocalDateTime.parse(datetime, dateTimeFormatter).plusMinutes(minutes);
+        LocalDateTime dateTime = LocalDateTime.parse(datetime, DEFAULT_DATETIME_FORMATTER).plusMinutes(minutes);
         Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
@@ -117,8 +116,7 @@ public class DateUtils {
         if (StringUtils.isBlank(datetime)) {
             return null;
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
-        LocalDateTime dateTime = LocalDateTime.parse(datetime, dateTimeFormatter).plusDays(days);
+        LocalDateTime dateTime = LocalDateTime.parse(datetime, DEFAULT_DATETIME_FORMATTER).plusDays(days);
         Instant instant = dateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
@@ -138,14 +136,13 @@ public class DateUtils {
         if (StringUtils.isBlank(datetime)) {
             return null;
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
-        LocalDateTime dateTime = LocalDateTime.parse(datetime, dateTimeFormatter).plusDays(days);
-        return dateTime.format(dateTimeFormatter);
+        LocalDateTime dateTime = LocalDateTime.parse(datetime, DEFAULT_DATETIME_FORMATTER).plusDays(days);
+        return dateTime.format(DEFAULT_DATETIME_FORMATTER);
     }
 
     /**
      * 给指定的时间添加天数
-     * 返回 {@link Date} 格式
+     * 返回 {@link Date} 对象
      *
      * @param days 要增加的天数
      * @return Date
@@ -170,7 +167,26 @@ public class DateUtils {
             return null;
         }
         LocalDateTime newDateTime = LocalDateTime.ofInstant(datetime.toInstant(), ZoneId.systemDefault());
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN);
-        return dateTimeFormatter.format(newDateTime);
+        return DEFAULT_DATETIME_FORMATTER.format(newDateTime);
+    }
+
+    /**
+     * 获取当天零点（开始时间）
+     *
+     * @return 2020-09-05 00:00:00
+     */
+    public static String getTodayStartTimeStr() {
+        LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        return todayStartTime.format(DEFAULT_DATETIME_FORMATTER);
+    }
+
+    /**
+     * 获取当天23:59:59（结束时间）
+     *
+     * @return 2020-09-05 23:59:59
+     */
+    public static String getTodayEndTimeStr() {
+        LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        return todayStartTime.format(DEFAULT_DATETIME_FORMATTER);
     }
 }

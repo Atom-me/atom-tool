@@ -87,5 +87,15 @@ public class DateUtilsTest {
         System.err.println(DateUtils.strToDate("2019:02:28*=====**23:53:=-33", "yyyy:MM:dd*=====**HH:mm:=-ss"));
     }
 
+    @Test
+    public void getTodayStartTimeStr() {
+        System.err.println(DateUtils.getTodayStartTimeStr());
+    }
+
+    @Test
+    public void getTodayEndTimeStr() {
+        System.err.println(DateUtils.getTodayEndTimeStr());
+    }
+
 }
 
