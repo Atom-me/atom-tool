@@ -43,7 +43,7 @@ public final class AesUtil {
      * 【密钥偏移量】：必须是16个字节，密钥默认偏移，可更改
      * 使用CBC模式，需要一个向量iv，可增加加密算法的强度
      */
-    private static final String IV_PARAMETER = "126hsb6sduwwduc8";
+    private static final String IV_PARAMETER = "JYA6yogPtn;PUEl8";
 
 
     private AesUtil() {
