@@ -176,7 +176,7 @@ public class DateUtils {
      * @return 2020-09-05 00:00:00
      */
     public static String getTodayStartTimeStr() {
-        LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
         return todayStartTime.format(DEFAULT_DATETIME_FORMATTER);
     }
 
@@ -188,5 +188,26 @@ public class DateUtils {
     public static String getTodayEndTimeStr() {
         LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
         return todayStartTime.format(DEFAULT_DATETIME_FORMATTER);
+    }
+
+
+    /**
+     * LocalDate to Date
+     *
+     * @param localDate
+     * @return
+     */
+    public static Date asDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * LocalDateTime to Date
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static Date asDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

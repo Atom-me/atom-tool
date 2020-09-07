@@ -4,6 +4,8 @@ import com.atom.tool.core.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -96,6 +98,30 @@ public class DateUtilsTest {
     public void getTodayEndTimeStr() {
         System.err.println(DateUtils.getTodayEndTimeStr());
     }
+
+    @Test
+    public void asDate() {
+        System.err.println(DateUtils.asDate(LocalDate.now()));
+        //java.lang.IllegalArgumentException: java.lang.ArithmeticException: long overflow
+//        System.err.println(DateUtils.asDate(LocalDate.MIN));
+        //java.lang.IllegalArgumentException: java.lang.ArithmeticException: long overflow
+//        System.err.println(DateUtils.asDate(LocalDate.MIN));
+
+
+        System.err.println(DateUtils.asDate(LocalDateTime.now()));
+        //java.lang.IllegalArgumentException: java.lang.ArithmeticException: long overflow
+//        System.err.println(DateUtils.asDate(LocalDateTime.MAX));
+        //java.lang.IllegalArgumentException: java.lang.ArithmeticException: long overflow
+//        System.err.println(DateUtils.asDate(LocalDateTime.MIN));
+
+
+        System.err.println(DateUtils.asDate(LocalDate.now().minusDays(9).atStartOfDay()));
+        //Sat Feb 29 00:00:00 CST 2020
+        System.err.println(DateUtils.asDate(LocalDate.of(2020, 3, 9).minusDays(9).atStartOfDay()));
+        //Sun Feb 28 00:00:00 CST 2021
+        System.err.println(DateUtils.asDate(LocalDate.of(2021, 3, 9).minusDays(9).atStartOfDay()));
+    }
+
 
 }
 
