@@ -198,6 +198,9 @@ public class DateUtils {
      * @return
      */
     public static Date asDate(LocalDate localDate) {
+        if (Objects.isNull(localDate)) {
+            return null;
+        }
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
@@ -208,6 +211,35 @@ public class DateUtils {
      * @return
      */
     public static Date asDate(LocalDateTime localDateTime) {
+        if (Objects.isNull(localDateTime)) {
+            return null;
+        }
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Date to LocalDate
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDate asLocalDate(Date date) {
+        if (Objects.isNull(date)) {
+            return null;
+        }
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * Date to LocalDateTime
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDateTime asLocalDateTime(Date date) {
+        if (Objects.isNull(date)) {
+            return null;
+        }
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }

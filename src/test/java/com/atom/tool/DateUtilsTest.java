@@ -120,8 +120,29 @@ public class DateUtilsTest {
         System.err.println(DateUtils.asDate(LocalDate.of(2020, 3, 9).minusDays(9).atStartOfDay()));
         //Sun Feb 28 00:00:00 CST 2021
         System.err.println(DateUtils.asDate(LocalDate.of(2021, 3, 9).minusDays(9).atStartOfDay()));
+
+
+        LocalDateTime localDateTime = null;
+        System.err.println(DateUtils.asDate(localDateTime));
+
+
+        LocalDate localDate = null;
+        System.err.println(DateUtils.asDate(localDate));
+
+
     }
 
+    @Test
+    public void asLocalDate() {
+        System.err.println(DateUtils.asLocalDate(new Date()));
+        System.err.println(DateUtils.asLocalDate(null));
+    }
+
+    @Test
+    public void asLocalDateTime() {
+        System.err.println(DateUtils.asLocalDateTime(new Date()));
+        System.err.println(DateUtils.asLocalDateTime(null));
+    }
 
 }
 
