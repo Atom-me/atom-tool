@@ -57,22 +57,22 @@ public final class AesUtil {
             return c.doFinal(src);
         } catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException
                 | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
-            log.warn(e.getLocalizedMessage(), e);
+            log.warn("encrypt error:[{}]", Throwables.getStackTraceAsString(e));
         }
         return null;
 
     }
 
-    private static byte[] encrypt(byte[] clearTextBytes, byte[] pwdBytes) throws Exception {
-        byte[] aesKey = new byte[AES_KEY_LENGTH];
-        if (pwdBytes.length < AES_KEY_LENGTH) {
+    private static byte[] encrypt(byte[] clearTextBytes, byte[] aesKeyBytes) throws Exception {
+        byte[] newAesKeyBytes = new byte[AES_KEY_LENGTH];
+        if (aesKeyBytes.length < AES_KEY_LENGTH) {
             throw new Exception("Length of AES key SHOULD BE 16 bytes");
         } else {
             if (AES_KEY_LENGTH >= 0) {
-                System.arraycopy(pwdBytes, 0, aesKey, 0, AES_KEY_LENGTH);
+                System.arraycopy(aesKeyBytes, 0, newAesKeyBytes, 0, AES_KEY_LENGTH);
             }
         }
-        SecretKeySpec keySpec = new SecretKeySpec(aesKey, ENCRY_ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRY_ALGORITHM);
         return encrypt(AES_CBC_PKCS5PADDING, keySpec, generateIv(IV_PARAMETER.getBytes(UTF_8)), clearTextBytes);
     }
 
@@ -80,18 +80,18 @@ public final class AesUtil {
      * BASE64加密
      *
      * @param clearText 明文，待加密的内容
-     * @param password  密码，加密的密码
+     * @param aesKey    密码，加密的密码
      * @return 返回密文，加密后得到的内容。加密错误返回null
      */
-    public static String encryptBase64(String clearText, String password) {
+    public static String encryptBase64(String clearText, String aesKey) {
         try {
-            byte[] passwordByte = passwordToBytes(password);
+            byte[] aesKeyBytes = aesKeyToBytes(aesKey);
             // 1 获取加密密文字节数组
-            byte[] cipherTextBytes = encrypt(clearText.getBytes(UTF_8), passwordByte);
+            byte[] cipherTextBytes = encrypt(clearText.getBytes(UTF_8), aesKeyBytes);
             // 2 对密文字节数组进行BASE64 encoder 得到 BASE6输出的密文,返回BASE64输出的密文
             return Base64.encodeBase64URLSafeString(cipherTextBytes);
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            log.warn("encryptBase64 error:[{}]", Throwables.getStackTraceAsString(e));
         }
         // 加密错误 返回null
         return null;
@@ -101,14 +101,14 @@ public final class AesUtil {
      * HEX加密
      *
      * @param clearText 明文，待加密的内容
-     * @param password  密码，加密的密码
+     * @param aesKey    密码，加密的密码
      * @return 返回密文，加密后得到的内容。加密错误返回null
      */
-    public static String encryptHex(String clearText, String password) {
+    public static String encryptHex(String clearText, String aesKey) {
         try {
-            byte[] passwordByte = passwordToBytes(password);
+            byte[] aesKeyByte = aesKeyToBytes(aesKey);
             // 1 获取加密密文字节数组
-            byte[] cipherTextBytes = encrypt(clearText.getBytes(UTF_8), passwordByte);
+            byte[] cipherTextBytes = encrypt(clearText.getBytes(UTF_8), aesKeyByte);
             // 2 对密文字节数组进行 转换为 HEX输出密文,返回 HEX输出密文
             return encodeHexString(cipherTextBytes);
         } catch (Exception e) {
@@ -129,22 +129,22 @@ public final class AesUtil {
         return null;
     }
 
-    public static byte[] decrypt(byte[] cipherTextBytes, byte[] aesKeyByte) throws Exception {
-        byte[] aesKey = new byte[AES_KEY_LENGTH];
-        if (aesKeyByte.length < AES_KEY_LENGTH) {
+    public static byte[] decrypt(byte[] cipherTextBytes, byte[] aesKeyBytes) throws Exception {
+        byte[] newAesKeyBytes = new byte[AES_KEY_LENGTH];
+        if (aesKeyBytes.length < AES_KEY_LENGTH) {
             throw new Exception("Length of AES key SHOULD BE 16 bytes");
         } else {
-            for (int i = 0; i < AES_KEY_LENGTH; i++) {
-                aesKey[i] = aesKeyByte[i];
+            if (AES_KEY_LENGTH >= 0) {
+                System.arraycopy(aesKeyBytes, 0, newAesKeyBytes, 0, AES_KEY_LENGTH);
             }
         }
-        SecretKeySpec keySpec = new SecretKeySpec(aesKey, ENCRY_ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRY_ALGORITHM);
         return decrypt(AES_CBC_PKCS5PADDING, keySpec, generateIv(IV_PARAMETER.getBytes(UTF_8)), cipherTextBytes);
     }
 
     public static String decryptBase64(String cipherText, String aesKey) {
         try {
-            byte[] aesKeyByte = passwordToBytes(aesKey);
+            byte[] aesKeyByte = aesKeyToBytes(aesKey);
             // 1 对 BASE64输出的密文进行 BASE64 编码 得到密文字节数组
             byte[] cipherTextBytes = Base64.decodeBase64(cipherText);
             // 2 对密文字节数组进行解密 得到明文字节数组
@@ -152,7 +152,7 @@ public final class AesUtil {
             // 3 根据 CHARACTER 转码，返回明文字符串
             return new String(clearTextBytes, UTF_8);
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            log.warn("decryptBase64 error:[{}]", Throwables.getStackTraceAsString(e));
         }
         // 解密错误返回null
         return null;
@@ -167,7 +167,7 @@ public final class AesUtil {
      */
     public static String decryptHex(String cipherText, String password) {
         try {
-            byte[] passwordByte = passwordToBytes(password);
+            byte[] passwordByte = aesKeyToBytes(password);
             // 1 将HEX输出密文 转为密文字节数组
             byte[] cipherTextBytes = decodeHex(cipherText);
             // 2 将密文字节数组进行解密 得到明文字节数组
@@ -175,7 +175,7 @@ public final class AesUtil {
             // 3 根据 CHARACTER 转码，返回明文字符串
             return new String(clearTextBytes, UTF_8);
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            log.warn("decryptHex error:[{}]", Throwables.getStackTraceAsString(e));
         }
         return null;
     }
@@ -184,15 +184,15 @@ public final class AesUtil {
     /**
      * 密码处理方法 如果加解密出问题， 请先查看本方法，排除密码长度不足补"0",导致密码不一致
      *
-     * @param password 待处理的密码
+     * @param aesKey 待处理的密码
      * @return
      */
-    private static byte[] passwordToBytes(String password) {
-        if (StringUtils.isBlank(password)) {
+    private static byte[] aesKeyToBytes(String aesKey) {
+        if (StringUtils.isBlank(aesKey)) {
             throw new IllegalArgumentException("Argument sKey is null.");
         }
         StringBuilder sb = new StringBuilder(AES_KEY_LENGTH);
-        sb.append(password);
+        sb.append(aesKey);
         while (sb.length() < AES_KEY_LENGTH) {
             sb.append("0");
         }
@@ -207,8 +207,8 @@ public final class AesUtil {
      */
     public static IvParameterSpec generateIv(byte[] iv) throws Exception {
         AlgorithmParameters params = AlgorithmParameters.getInstance(ENCRY_ALGORITHM);
-        byte[] ivByte = new byte[16];
-        new SecureRandom().nextBytes(ivByte);
+        byte[] ivBytes = new byte[16];
+        new SecureRandom().nextBytes(ivBytes);
         params.init(new IvParameterSpec(iv));
         return params.getParameterSpec(IvParameterSpec.class);
     }
