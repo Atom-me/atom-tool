@@ -31,7 +31,7 @@ public final class AesUtil {
     /**
      * 加密算法
      */
-    private static final String ENCRY_ALGORITHM = "AES";
+    private static final String ENCRYPT_ALGORITHM = "AES";
 
     /**
      * AES key 字节长度
@@ -72,7 +72,7 @@ public final class AesUtil {
                 System.arraycopy(aesKeyBytes, 0, newAesKeyBytes, 0, AES_KEY_LENGTH);
             }
         }
-        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRY_ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRYPT_ALGORITHM);
         return encrypt(AES_CBC_PKCS5PADDING, keySpec, generateIv(IV_PARAMETER.getBytes(UTF_8)), clearTextBytes);
     }
 
@@ -138,7 +138,7 @@ public final class AesUtil {
                 System.arraycopy(aesKeyBytes, 0, newAesKeyBytes, 0, AES_KEY_LENGTH);
             }
         }
-        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRY_ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(newAesKeyBytes, ENCRYPT_ALGORITHM);
         return decrypt(AES_CBC_PKCS5PADDING, keySpec, generateIv(IV_PARAMETER.getBytes(UTF_8)), cipherTextBytes);
     }
 
@@ -206,7 +206,7 @@ public final class AesUtil {
      * 生成iv,密钥偏移量
      */
     public static IvParameterSpec generateIv(byte[] iv) throws Exception {
-        AlgorithmParameters params = AlgorithmParameters.getInstance(ENCRY_ALGORITHM);
+        AlgorithmParameters params = AlgorithmParameters.getInstance(ENCRYPT_ALGORITHM);
         byte[] ivBytes = new byte[16];
         new SecureRandom().nextBytes(ivBytes);
         params.init(new IvParameterSpec(iv));
@@ -233,14 +233,14 @@ public final class AesUtil {
      * @throws UnsupportedEncodingException
      */
     private static byte[] encryptOrDecrypt(int mode, byte[] byteContent, String key, IvParameterSpec iv, AesTypeEnum type, String modeAndPadding) throws InvalidKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
-        KeyGenerator kGen = KeyGenerator.getInstance(ENCRY_ALGORITHM);
+        KeyGenerator kGen = KeyGenerator.getInstance(ENCRYPT_ALGORITHM);
         //此处解决mac，linux报错
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         random.setSeed(key.getBytes(UTF_8));
         kGen.init(type.getValue(), random);
         SecretKey secretKey = kGen.generateKey();
         byte[] encodedSecretKey = secretKey.getEncoded();
-        SecretKeySpec keySpec = new SecretKeySpec(encodedSecretKey, ENCRY_ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(encodedSecretKey, ENCRYPT_ALGORITHM);
         // 创建密码器
         Cipher cipher = Cipher.getInstance(modeAndPadding);
         cipher.init(mode, keySpec, iv);
