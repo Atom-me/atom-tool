@@ -134,6 +134,9 @@ public class DateUtilsTest {
 
     @Test
     public void asLocalDate() {
+        LocalDate localDate = DateUtils.asLocalDate(new Date());
+        //闰年判断 isLeapYear
+        System.err.println(localDate.isLeapYear());
         System.err.println(DateUtils.asLocalDate(new Date()));
         System.err.println(DateUtils.asLocalDate(null));
     }
