@@ -1,4 +1,4 @@
-package com.atom.tool.encrypt;
+package com.atom.tool.encrypt.md5;
 
 import org.apache.commons.lang3.StringUtils;
 

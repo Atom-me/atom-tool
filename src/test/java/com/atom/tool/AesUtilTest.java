@@ -1,6 +1,6 @@
 package com.atom.tool;
 
-import com.atom.tool.encrypt.AesUtil;
+import com.atom.tool.encrypt.aes.AesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

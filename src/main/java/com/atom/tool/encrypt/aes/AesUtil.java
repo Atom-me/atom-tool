@@ -1,4 +1,4 @@
-package com.atom.tool.encrypt;
+package com.atom.tool.encrypt.aes;
 
 import com.atom.tool.constants.ModeAndPadding;
 import com.atom.tool.enums.AesTypeEnum;
