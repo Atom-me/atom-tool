@@ -8,7 +8,6 @@ import javax.activation.DataSource;
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Properties;
 
@@ -76,7 +75,7 @@ public class ApacheMailFetcher implements MailFetcher {
                         System.out.println(dataSource.getName());
                         System.out.println(dataSource.getContentType());
                         String destinationFilePath = "/Users/atom/testDir/mail_attachment/";
-                        FileUtil.writeToFile(dataSource.getInputStream(), destinationFilePath + dataSource.getName(), StandardCopyOption.REPLACE_EXISTING);
+                        FileUtil.writeToFile(dataSource.getInputStream(), destinationFilePath + dataSource.getName());
                     }
                 }
                 System.err.println("======================================");

@@ -31,4 +31,15 @@ public class FileUtil {
             log.error("FileUtil writeToFile failure [{}]", Throwables.getStackTraceAsString(e));
         }
     }
+
+    /**
+     * copy inputStream to a file.
+     *
+     * @param inputStream
+     * @param destinationFilePath The destination file to be written.
+     */
+    public static void writeToFile(InputStream inputStream, String destinationFilePath) {
+        writeToFile(inputStream, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
 }
