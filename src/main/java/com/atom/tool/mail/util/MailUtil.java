@@ -8,6 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Atom
+ */
 @Slf4j
 public class MailUtil {
 

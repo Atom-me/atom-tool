@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * @author Atom
  */
-public class DateUtils {
+public class DateUtil {
 
     public static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 

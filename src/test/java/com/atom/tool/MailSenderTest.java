@@ -3,6 +3,9 @@ package com.atom.tool;
 import com.atom.tool.mail.MailSender;
 import com.atom.tool.mail.TextMailSender;
 
+/**
+ * @author Atom
+ */
 public class MailSenderTest {
     private static final String subject = "subject主题";
     private static final String content = "mail_apache text 邮件内容323";

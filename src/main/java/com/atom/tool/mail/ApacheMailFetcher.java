@@ -1,5 +1,6 @@
 package com.atom.tool.mail;
 
+import com.atom.tool.core.FileUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 
@@ -77,15 +78,14 @@ public class ApacheMailFetcher implements MailFetcher {
                     for (DataSource dataSource : attachmentList) {
                         System.out.println(dataSource.getName());
                         System.out.println(dataSource.getContentType());
-                        Path attachmentSavePath = Paths.get("/Users/atom/testDir/mail_attachment/", dataSource.getName());
-                        InputStream inputStream = dataSource.getInputStream();
-                        Files.copy(inputStream, attachmentSavePath, StandardCopyOption.REPLACE_EXISTING);
+                        String destinationFilePath = "/Users/atom/testDir/mail_attachment/";
+                        FileUtil.writeToFile(dataSource.getInputStream(), destinationFilePath + dataSource.getName(), StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
                 System.err.println("======================================");
             }
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             try {
                 if (folder != null) {

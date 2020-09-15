@@ -11,7 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Atom
  */
 @Slf4j
-public class Pinyin4jUtils {
+public class Pinyin4jUtil {
 
     /**
      * 中文转拼音
