@@ -67,6 +67,7 @@ public class ApacheMailFetcher implements MailFetcher {
                 MimeMessageParser parser = new MimeMessageParser(mimeMessage).parse();
                 System.out.println(i + "   message  getContentType: " + message.getContentType());
                 System.out.println(i + "   message  getSubject: " + message.getSubject());
+                System.out.println(i + "   message  getSentDate: " + message.getSentDate());
                 System.out.println(i + "   parser getSubject: " + parser.getSubject());
                 System.out.println(i + "   parser getFrom: " + parser.getFrom());
                 System.out.println(i + "   mimeMessage getBody: " + getBody(mimeMessage));
