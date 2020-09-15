@@ -54,11 +54,11 @@ public class DesensitizedUtilsTest {
     }
 
     /**
-     * 电子邮箱脱敏测试：danny@126.com → d****@126.com
+     * 电子邮箱脱敏测试：abcde@126.com → a****@126.com
      */
     @Test
     public void testEmail() {
-        System.err.println(DesensitizedUtils.email("sarming@126.com"));
+        System.err.println(DesensitizedUtils.email("abcdefg@126.com"));
     }
 
     /**
