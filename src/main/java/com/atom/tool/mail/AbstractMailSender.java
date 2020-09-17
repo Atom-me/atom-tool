@@ -76,12 +76,18 @@ public abstract class AbstractMailSender implements MailSender {
         try {
             if (email instanceof MultiPartEmail) {
                 // create attachment
-                EmailAttachment emailAttachment = new EmailAttachment();
-                emailAttachment.setURL(new URL(path));
-                emailAttachment.setName(path.substring(path.lastIndexOf("/") + 1));
-                //create the email message
-                MultiPartEmail multiPartEmail = (MultiPartEmail) email;
-                multiPartEmail.attach(emailAttachment);
+                if (StringUtils.isNotBlank(path)) {
+                    EmailAttachment emailAttachment = new EmailAttachment();
+                    if (path.startsWith("http")) {
+                        emailAttachment.setURL(new URL(path));
+                    } else {
+                        emailAttachment.setPath(path);
+                    }
+                    emailAttachment.setName(path.substring(path.lastIndexOf("/") + 1));
+                    //create the email message
+                    MultiPartEmail multiPartEmail = (MultiPartEmail) email;
+                    multiPartEmail.attach(emailAttachment);
+                }
             }
         } catch (MalformedURLException e) {
             log.error("错误：创建 附件URL 出错！", e);

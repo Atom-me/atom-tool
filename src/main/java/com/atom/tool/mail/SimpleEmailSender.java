@@ -3,22 +3,23 @@ package com.atom.tool.mail;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
+import org.apache.commons.mail.SimpleEmail;
 
 /**
- * send multi part internet email messages with attachments.
+ * send simple internet email messages without attachments.
  *
  * @author Atom
  */
-public class MultiPartEmailSender extends AbstractMailSender {
+public class SimpleEmailSender extends AbstractMailSender {
 
 
-    public MultiPartEmailSender(String subject, String content, String[] to) {
+    public SimpleEmailSender(String subject, String content, String[] to) {
         super(subject, content, to);
     }
 
     @Override
     protected Email createEmail() {
-        return new MultiPartEmail();
+        return new SimpleEmail();
     }
 
     @Override
