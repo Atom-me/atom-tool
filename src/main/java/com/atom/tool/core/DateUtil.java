@@ -242,4 +242,18 @@ public class DateUtil {
         }
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
+
+    /**
+     * date to str with customize pattern
+     * <p>
+     * DateUtil.dateToStrWithCustomizePattern(new Date(), "yyyy-MM-dd");  --> 2020-09-17
+     * DateUtil.dateToStrWithCustomizePattern(new Date(2019, 10, 15), "yy-MM-dd"); --> 19-11-15
+     *
+     * @param date
+     * @param pattern only support date ,not support date with time,such as "yyyy-MM-dd", not "yyyy-MM-dd HH:mm:ss"
+     * @return
+     */
+    public static String formatDateWithCustomizePattern(Date date, String pattern) {
+        return asLocalDate(date).format(DateTimeFormatter.ofPattern(pattern));
+    }
 }

@@ -1,6 +1,7 @@
 package com.atom.tool;
 
 import com.alibaba.fastjson.JSON;
+import com.atom.tool.core.DateUtil;
 import com.atom.tool.sensitive.DesensitizedUtils;
 import com.atom.tool.testbean.TestEmployeesInfo;
 import org.junit.Test;
@@ -30,6 +31,17 @@ public class DesensitizedUtilsTest {
     public void testIdCardNum() {
         System.err.println(DesensitizedUtils.idCardNum("450481197804234431"));
         System.err.println(DesensitizedUtils.idCardNum("44090119760311922X"));
+    }
+
+
+    /**
+     * 出生日期脱敏测试：2020-09-17 --> 20*-*-17
+     */
+    @Test
+    public void testBirthday() {
+        String dateStr = DateUtil.formatDateWithCustomizePattern(new Date(), "yyyy-MM-dd");
+        System.err.println(dateStr);
+        System.err.println(DesensitizedUtils.birthday(dateStr));
     }
 
     /**

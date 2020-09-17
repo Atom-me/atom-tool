@@ -1,5 +1,6 @@
 package com.atom.tool.sensitive;
 
+import com.atom.tool.core.ArrayUtil;
 import com.atom.tool.reflection.ReflectionUtil;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
@@ -138,7 +139,7 @@ public class DesensitizedUtils {
     }
 
     /**
-     * 【手机号码】前三位，后四位，其他隐藏，比如135****6810
+     * 【手机号码】前三位，后四位，其他隐藏，比如135****6810 (携程规则)
      *
      * @param num
      * @return
@@ -210,6 +211,28 @@ public class DesensitizedUtils {
             return "";
         }
         return StringUtils.repeat("*", password.length());
+    }
+
+    /**
+     * 【出生日期】年显示前两位，日 全部显示 如：19*-*-22 (携程规则)
+     *
+     * @param birthday the date pattern must be "yyyy-MM-dd"
+     * @return
+     */
+    public static String birthday(String birthday) {
+        if (StringUtils.isEmpty(birthday)) {
+            return "";
+        }
+        String[] split = birthday.split("-");
+        if (split.length < 3) {
+            return birthday;
+        }
+        String year = split[0];
+        String month = split[1];
+        String day = split[2];
+        String maskedYear = StringUtils.rightPad(StringUtils.left(year, 2), StringUtils.length(year), "*");
+        String maskedMonth = StringUtils.repeat("*", StringUtils.length(month));
+        return String.join("-", maskedYear, maskedMonth, day);
     }
 
 

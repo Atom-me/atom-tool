@@ -147,5 +147,18 @@ public class DateUtilTest {
         System.err.println(DateUtil.asLocalDateTime(null));
     }
 
+    @Test
+    public void formatDateWithCustomizePattern() {
+        //2020-09-17
+        System.err.println(DateUtil.formatDateWithCustomizePattern(new Date(), "yyyy-MM-dd"));
+        System.err.println(DateUtil.formatDateWithCustomizePattern(new Date(), "yyyy----MM---dd"));
+        //2020----09---17
+        System.err.println(DateUtil.formatDateWithCustomizePattern(new Date(), "yyyy:::MM:::dd"));
+        //20:::09:::17
+        System.err.println(DateUtil.formatDateWithCustomizePattern(new Date(), "yy:::MM:::dd"));
+        //19-11-15
+        System.err.println(DateUtil.formatDateWithCustomizePattern(new Date(2019, 10, 15), "yy-MM-dd"));
+    }
+
 }
 
