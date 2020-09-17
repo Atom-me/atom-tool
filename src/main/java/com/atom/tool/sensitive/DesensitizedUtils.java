@@ -102,8 +102,9 @@ public class DesensitizedUtils {
     }
 
     /**
-     * 【身份证号】显示最后四位，其他隐藏。共计18位或者15位，
-     * 比如：33010419800905945X -> **************945X
+     * 【身份证号】显示前面4位和最后四位，其他隐藏。共计18位或者15位（携程规则）
+     * 450481197804234431 -> 4504***********431
+     * 44090119760311922X -> 4409***********22X
      *
      * @param id
      * @return
@@ -112,8 +113,15 @@ public class DesensitizedUtils {
         if (StringUtils.isBlank(id)) {
             return "";
         }
-        String right = StringUtils.right(id, 4);
-        return StringUtils.leftPad(right, StringUtils.length(id), "*");
+        // left=4504
+        String left = StringUtils.left(id, 4);
+        //right=431
+        String right = StringUtils.right(id, 3);
+        //starWithRight=***************431  15个*加后三位明文
+        String starWithRight = StringUtils.leftPad(right, StringUtils.length(id), "*");
+        //remove StringUtils.length(left) 个 * ， starWithRightWithoutLeft=***********431  得到11个*加后三位明文
+        String starWithRightWithoutLeft = StringUtils.removeStart(starWithRight, StringUtils.repeat("*", StringUtils.length(left)));
+        return left.concat(starWithRightWithoutLeft);
     }
 
     /**

@@ -22,11 +22,14 @@ public class DesensitizedUtilsTest {
     }
 
     /**
-     * 身份证号脱敏测试：33010419800905945X → **************945X
+     * 身份证号脱敏测试：
+     * 450481197804234431 -> 4504***********431
+     * 44090119760311922X -> 4409***********22X
      */
     @Test
     public void testIdCardNum() {
-        System.err.println(DesensitizedUtils.idCardNum("33010419800905945X"));
+        System.err.println(DesensitizedUtils.idCardNum("450481197804234431"));
+        System.err.println(DesensitizedUtils.idCardNum("44090119760311922X"));
     }
 
     /**
