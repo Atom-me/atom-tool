@@ -84,7 +84,7 @@ public abstract class AbstractMailSender implements MailSender {
                 multiPartEmail.attach(emailAttachment);
             }
         } catch (MalformedURLException e) {
-            log.error("错误：创建 URL 出错！", e);
+            log.error("错误：创建 附件URL 出错！", e);
         } catch (EmailException e) {
             log.error("错误：添加附件出错！", e);
         }

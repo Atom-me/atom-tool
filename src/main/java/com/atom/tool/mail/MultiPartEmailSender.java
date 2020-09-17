@@ -9,10 +9,10 @@ import org.apache.commons.mail.MultiPartEmail;
  *
  * @author Atom
  */
-public class TextMailSender extends AbstractMailSender {
+public class MultiPartEmailSender extends AbstractMailSender {
 
 
-    public TextMailSender(String subject, String content, String[] to) {
+    public MultiPartEmailSender(String subject, String content, String[] to) {
         super(subject, content, to);
     }
 
