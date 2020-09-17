@@ -83,6 +83,8 @@ public abstract class AbstractMailSender implements MailSender {
                     } else {
                         emailAttachment.setPath(path);
                     }
+                    emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+                    emailAttachment.setDescription("this is just an attachment desc");
                     emailAttachment.setName(path.substring(path.lastIndexOf("/") + 1));
                     //create the email message
                     MultiPartEmail multiPartEmail = (MultiPartEmail) email;
