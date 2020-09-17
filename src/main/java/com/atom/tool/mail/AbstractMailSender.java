@@ -1,6 +1,7 @@
 package com.atom.tool.mail;
 
 import com.atom.tool.mail.util.MailUtil;
+import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,7 @@ public abstract class AbstractMailSender implements MailSender {
     }
 
     /**
-     * 抄送
+     * CC : carbon copy.
      *
      * @param cc
      */
@@ -42,14 +43,19 @@ public abstract class AbstractMailSender implements MailSender {
                 try {
                     email.addCc(MailUtil.encodeAddress(address));
                 } catch (EmailException e) {
-                    log.error("错误：添加 CC 出错！", e);
+                    log.error("add cc error! [{}]", Throwables.getStackTraceAsString(e));
                 }
             }
         }
     }
 
     /**
-     * 暗送
+     * BCC : blind carbon copy.
+     * <p>
+     * Just like CC, BCC is a way of sending copies of an email to other people.
+     * The difference between the two is that, while you can see a list of recipients when CC is used,
+     * that’s not the case with BCC.
+     * It’s called blind carbon copy because the other recipients won’t be able to see that someone else has been sent a copy of the email.
      *
      * @param bcc
      */
@@ -60,16 +66,18 @@ public abstract class AbstractMailSender implements MailSender {
                 try {
                     email.addBcc(MailUtil.encodeAddress(address));
                 } catch (EmailException e) {
-                    log.error("错误：添加 BCC 出错！", e);
+                    log.error("add bcc error！[{}]", Throwables.getStackTraceAsString(e));
                 }
             }
         }
     }
 
     /**
-     * 添加附件
+     * add the attachment
+     * You can also use EmailAttachment to reference any valid URL for files that you do not have locally.
+     * When the message is sent, the file will be downloaded and attached to the message automatically.
      *
-     * @param path 附件地址
+     * @param path the path of attachment
      */
     @Override
     public void addAttachment(String path) {
@@ -77,6 +85,7 @@ public abstract class AbstractMailSender implements MailSender {
             if (email instanceof MultiPartEmail) {
                 // create attachment
                 if (StringUtils.isNotBlank(path)) {
+                    //Create the attachment
                     EmailAttachment emailAttachment = new EmailAttachment();
                     if (path.startsWith("http")) {
                         emailAttachment.setURL(new URL(path));
@@ -86,15 +95,16 @@ public abstract class AbstractMailSender implements MailSender {
                     emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
                     emailAttachment.setDescription("this is just an attachment desc");
                     emailAttachment.setName(path.substring(path.lastIndexOf("/") + 1));
-                    //create the email message
+
                     MultiPartEmail multiPartEmail = (MultiPartEmail) email;
+                    //add the attachment
                     multiPartEmail.attach(emailAttachment);
                 }
             }
         } catch (MalformedURLException e) {
-            log.error("错误：创建 附件URL 出错！", e);
+            log.error("create attachment URL  error！[{}]", Throwables.getStackTraceAsString(e));
         } catch (EmailException e) {
-            log.error("错误：添加附件出错！", e);
+            log.error("add attachment error！[{}]", Throwables.getStackTraceAsString(e));
         }
     }
 
@@ -104,48 +114,48 @@ public abstract class AbstractMailSender implements MailSender {
     @Override
     public void send() {
         try {
-            // 判断协议名是否为 smtp（暂时仅支持 smtp，未来可考虑扩展）
+            // check protocol
             if (!"smtp".equalsIgnoreCase(MailConstant.Sender.PROTOCOL)) {
-                log.error("错误：不支持该协议！目前仅支持 smtp 协议");
+                log.error("not support this protocol [{}], now only support smtp protocol！", MailConstant.Sender.PROTOCOL);
                 return;
             }
-            // 判断是否支持 SSL 连接
+            // set SSL
             if (MailConstant.Sender.IS_SSL) {
                 email.setSSLOnConnect(true);
             }
-            // 设置 主机名 与 端口号
+            // set hostname and port
             email.setHostName(MailConstant.Sender.HOST);
             email.setSmtpPort(MailConstant.Sender.PORT);
-            // 判断是否进行身份认证
+            // set authentication
             if (MailConstant.Sender.IS_AUTH) {
                 email.setAuthentication(MailConstant.Sender.AUTH_USERNAME, MailConstant.Sender.AUTH_PASSWORD);
             }
-            // 判断是否开启 Debug 模式
+            // open debug mode for display debug information
             if (MailConstant.IS_DEBUG) {
                 email.setDebug(true);
             }
-            // 设置 From 地址
+            // set sender from
             if (StringUtils.isNotEmpty(MailConstant.Sender.FROM.trim())) {
                 email.setFrom(MailUtil.encodeAddress(MailConstant.Sender.FROM));
             }
-            // 设置 To 地址
+            // set send to
             for (String address : to) {
                 email.addTo(MailUtil.encodeAddress(address));
             }
-            // 设置主题
+            // set subject
             email.setSubject(subject);
-            // 设置内容（在子类中实现）
+            // set content ,implement in subClass
             setContent(email, content);
-            // 发送
+            // send email
             String sendResult = email.send();
             System.err.println(sendResult);
         } catch (EmailException e) {
-            log.error("send email failure", e);
+            log.error("send email error! [{}]", Throwables.getStackTraceAsString(e));
         }
     }
 
     /**
-     * 创建具体类型的邮件对象 {@link Email}
+     * create special email instance {@link Email}
      *
      * @return
      * @see org.apache.commons.mail.HtmlEmail
@@ -156,7 +166,7 @@ public abstract class AbstractMailSender implements MailSender {
     protected abstract Email createEmail();
 
     /**
-     * 设置邮件内容
+     * set email content
      *
      * @param email
      * @param content
