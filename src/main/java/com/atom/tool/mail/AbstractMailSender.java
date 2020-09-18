@@ -12,6 +12,8 @@ import org.apache.commons.mail.MultiPartEmail;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Atom
@@ -119,6 +121,7 @@ public abstract class AbstractMailSender implements MailSender {
                 log.error("not support this protocol [{}], now only support smtp protocol！", MailConstant.Sender.PROTOCOL);
                 return;
             }
+            email.setCharset(StandardCharsets.UTF_8.name());
             // set SSL
             if (MailConstant.Sender.IS_SSL) {
                 email.setSSLOnConnect(true);
