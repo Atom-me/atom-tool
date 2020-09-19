@@ -12,7 +12,6 @@ import org.apache.commons.mail.MultiPartEmail;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -36,7 +35,7 @@ public abstract class AbstractMailSender implements MailSender {
     /**
      * CC : carbon copy.
      *
-     * @param cc
+     * @param cc CC addresses.
      */
     @Override
     public void addCc(String[] cc) {
@@ -59,7 +58,7 @@ public abstract class AbstractMailSender implements MailSender {
      * that’s not the case with BCC.
      * It’s called blind carbon copy because the other recipients won’t be able to see that someone else has been sent a copy of the email.
      *
-     * @param bcc
+     * @param bcc array of Strings to set.
      */
     @Override
     public void addBcc(String[] bcc) {
