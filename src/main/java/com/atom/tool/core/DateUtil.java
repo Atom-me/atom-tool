@@ -244,6 +244,21 @@ public class DateUtil {
     }
 
     /**
+     * String to LocalDateTime
+     *
+     * @param dateStr
+     * @return
+     */
+    public static LocalDateTime asLocalDateTime(String dateStr) {
+        if (StringUtils.isBlank(dateStr)) {
+            return null;
+        }
+        Date date = strToDate(dateStr, DEFAULT_DATETIME_PATTERN);
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+
+    /**
      * date to str with customize pattern
      * <p>
      * DateUtil.dateToStrWithCustomizePattern(new Date(), "yyyy-MM-dd");  --> 2020-09-17
