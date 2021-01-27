@@ -144,7 +144,6 @@ public class DateUtilTest {
     @Test
     public void asLocalDateTime() {
         System.err.println(DateUtil.asLocalDateTime(new Date()));
-        System.err.println(DateUtil.asLocalDateTime(null));
     }
 
     @Test
