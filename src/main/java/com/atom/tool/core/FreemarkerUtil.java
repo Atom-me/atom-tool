@@ -1,13 +1,12 @@
 package com.atom.tool.core;
 
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -28,14 +27,16 @@ public class FreemarkerUtil {
 
     static {
         try {
-            String path = ResourceUtils.getURL("classpath:templates").getFile();
-            FREEMARKER_CONFIG.setDirectoryForTemplateLoading(new File(path));
+//            String path = ResourceUtils.getURL("classpath:templates").getFile();
+//            FREEMARKER_CONFIG.setDirectoryForTemplateLoading(new File(path));
+            ClassTemplateLoader templates = new ClassTemplateLoader(FreemarkerUtil.class.getClassLoader(), "templates");
+            FREEMARKER_CONFIG.setTemplateLoader(templates);
             FREEMARKER_CONFIG.setNumberFormat("#");
             FREEMARKER_CONFIG.setClassicCompatible(true);
             FREEMARKER_CONFIG.setDefaultEncoding("UTF-8");
             FREEMARKER_CONFIG.setLocale(Locale.CHINA);
             FREEMARKER_CONFIG.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
