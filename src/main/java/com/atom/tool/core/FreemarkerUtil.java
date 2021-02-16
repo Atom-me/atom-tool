@@ -37,7 +37,7 @@ public class FreemarkerUtil {
             FREEMARKER_CONFIG.setLocale(Locale.CHINA);
             FREEMARKER_CONFIG.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("freemarker init config error: ", e);
         }
     }
 
