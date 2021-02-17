@@ -1,6 +1,9 @@
 package com.atom.tool.core;
 
 import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -9,8 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * freemarker tool
@@ -24,13 +26,14 @@ public class FreemarkerUtil {
      * freemarker config
      */
     private static final Configuration FREEMARKER_CONFIG = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+    private static final List<TemplateLoader> TEMPLATE_LOADERS = new ArrayList<>();
 
     static {
         try {
-//            String path = ResourceUtils.getURL("classpath:templates").getFile();
-//            FREEMARKER_CONFIG.setDirectoryForTemplateLoading(new File(path));
-            ClassTemplateLoader templates = new ClassTemplateLoader(FreemarkerUtil.class.getClassLoader(), "templates");
-            FREEMARKER_CONFIG.setTemplateLoader(templates);
+            ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(FreemarkerUtil.class.getClassLoader(), "templates");
+            StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
+            TEMPLATE_LOADERS.addAll(Arrays.asList(classTemplateLoader, stringTemplateLoader));
+            FREEMARKER_CONFIG.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{classTemplateLoader, stringTemplateLoader}));
             FREEMARKER_CONFIG.setNumberFormat("#");
             FREEMARKER_CONFIG.setClassicCompatible(true);
             FREEMARKER_CONFIG.setDefaultEncoding("UTF-8");
@@ -70,5 +73,34 @@ public class FreemarkerUtil {
         return processTemplateIntoString(template, params);
     }
 
+    /**
+     * process template to string use templateContentString in memory
+     *
+     * @param templateName
+     * @param templateContent
+     * @param params
+     * @return
+     * @throws IOException
+     * @throws TemplateException
+     */
+    public static String processTemplateContentToString(String templateName, String templateContent, Map<String, Object> params) throws IOException, TemplateException {
+        StringTemplateLoader stringTemplateLoader = lookUpStringTemplateLoader();
+        stringTemplateLoader.putTemplate(templateName, templateContent);
+        Template template = FREEMARKER_CONFIG.getTemplate(templateName);
+        return processTemplateIntoString(template, params);
+    }
 
+    /**
+     * look up the StringTemplateLoader
+     *
+     * @return
+     */
+    private static StringTemplateLoader lookUpStringTemplateLoader() {
+        for (TemplateLoader templateLoader : TEMPLATE_LOADERS) {
+            if (templateLoader instanceof StringTemplateLoader) {
+                return (StringTemplateLoader) templateLoader;
+            }
+        }
+        throw new RuntimeException("未初始化StringTemplateLoader！");
+    }
 }
